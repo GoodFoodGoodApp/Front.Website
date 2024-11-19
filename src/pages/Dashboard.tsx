@@ -8,6 +8,7 @@ import EmployeesList from "./EmployeesList";
 import ProductsList from "./ProductsList";
 import SitesList from "./SitesList";
 import HomeDashboard from "./HomeDashboard";
+import Statistics from "./Statistics";
 
 const Dashboard = () => {
   const [itemActive, setItemActive] = useState("home"); // Initialiser l'état
@@ -103,7 +104,7 @@ const Dashboard = () => {
             sites: <SitesList />,
             products: <ProductsList />,
             employees: <EmployeesList />,
-            // stats: <Stats />,
+            stats: <Statistics />,
             // settings: <Settings />,
           }[itemActive]
         }

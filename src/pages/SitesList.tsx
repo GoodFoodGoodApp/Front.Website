@@ -1,35 +1,31 @@
-import React from "react";
-import { Box, Button, IconButton, Input, Table, Thead, Tbody, Tr, Th, Td, Flex, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, Button, IconButton, Input, Table, Thead, Tbody, Tr, Th, Td, Flex, Text, Spinner } from "@chakra-ui/react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import axios from "axios";
 
 const Establishments = () => {
-  const establishments = [
-    {
-      name: "Restaurant La Belle Époque",
-      city: "Paris",
-      phone: "01 23 45 67 89",
-      status: "Ouvert",
-    },
-    {
-      name: "Café du Centre",
-      city: "Lyon",
-      phone: "04 56 78 90 12",
-      status: "Fermé",
-    },
-    {
-      name: "Boulangerie Plaisir",
-      city: "Marseille",
-      phone: "03 67 89 01 23",
-      status: "Ouvert",
-    },
-    {
-      name: "Brasserie Le Sud",
-      city: "Nice",
-      phone: "06 12 34 56 78",
-      status: "Ouvert",
-    },
-    // Add more establishments as needed
-  ];
+  const [establishments, setEstablishments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Fetch establishments from the API
+  useEffect(() => {
+    const fetchEstablishments = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/restaurant");
+        setEstablishments(response.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des établissements :", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEstablishments();
+  }, []);
+
+  // Filter establishments based on the search query
+  const filteredEstablishments = establishments.filter((establishment) => establishment.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <Box py={5}>
@@ -38,38 +34,46 @@ const Establishments = () => {
           Liste des établissements
         </Text>
         <Flex align="center">
-          <Input placeholder="Rechercher..." maxW="300px" mr={4} size="md" bg="white" />
+          <Input placeholder="Rechercher..." maxW="300px" mr={4} size="md" bg="white" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           <Button leftIcon={<FaPlus />} colorScheme="green" size="md">
             Ajouter
           </Button>
         </Flex>
       </Flex>
 
-      <Table variant="simple" bg="white" rounded="md" shadow="sm">
-        <Thead>
-          <Tr>
-            <Th>Nom</Th>
-            <Th>Ville</Th>
-            <Th>Téléphone</Th>
-            <Th>Statut</Th>
-            <Th></Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {establishments.map((establishment, index) => (
-            <Tr key={index}>
-              <Td>{establishment.name}</Td>
-              <Td>{establishment.city}</Td>
-              <Td>{establishment.phone}</Td>
-              <Td>{establishment.status}</Td>
-              <Td>
-                <IconButton aria-label="Edit" icon={<FaEdit />} mr={2} colorScheme="green" />
-                <IconButton aria-label="Delete" icon={<FaTrash />} colorScheme="red" />
-              </Td>
+      {loading ? (
+        <Flex justify="center" align="center" height="200px">
+          <Spinner size="lg" />
+        </Flex>
+      ) : (
+        <Table variant="simple" bg="white" rounded="md" shadow="sm">
+          <Thead>
+            <Tr>
+              <Th>Nom</Th>
+              <Th>Ville</Th>
+              <Th>Téléphone</Th>
+              <Th>Région</Th>
+              <Th>Statut</Th>
+              <Th>Actions</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {filteredEstablishments.map((establishment) => (
+              <Tr key={establishment.id}>
+                <Td>{establishment.name}</Td>
+                <Td>{establishment.city.name}</Td>
+                <Td>{establishment.phone}</Td>
+                <Td>{establishment.city.region.name}</Td>
+                <Td>{establishment.status || "N/A"}</Td>
+                <Td>
+                  <IconButton aria-label="Edit" icon={<FaEdit />} mr={2} colorScheme="green" />
+                  <IconButton aria-label="Delete" icon={<FaTrash />} colorScheme="red" />
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      )}
     </Box>
   );
 };

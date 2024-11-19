@@ -5,34 +5,33 @@ import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 const Employees = () => {
   const employees = [
     {
-      name: "Karthi",
-      email: "karthi@gmail.com",
+      name: "Ethan Parker",
+      email: "ethan.parker@gmail.com",
       phone: "7305477760",
       role: "Livreur",
       location: "Rouen",
     },
     {
-      name: "Karthi",
-      email: "karthi@gmail.com",
+      name: "Sophia Carter",
+      email: "sophia.carter@gmail.com",
       phone: "7305477760",
       role: "Gérant",
       location: "Rouen",
     },
     {
-      name: "Karthi",
-      email: "karthi@gmail.com",
+      name: "Liam Johnson",
+      email: "liam.johnson@gmail.com",
       phone: "7305477760",
       role: "Gérant",
       location: "Toulouse",
     },
     {
-      name: "Karthi",
-      email: "karthi@gmail.com",
+      name: "Olivia Williams",
+      email: "olivia.williams@gmail.com",
       phone: "7305477760",
       role: "Livreur",
       location: "Toulouse",
     },
-    // Add more employee records as needed
   ];
 
   return (
